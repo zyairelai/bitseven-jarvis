@@ -2,7 +2,7 @@ import config
 import binance_futures
 from termcolor import colored
 
-def heikin_ashi(hour): # >>> "UP" // "DOWN" // "INDECISIVE"
+def heikin_ashi(hour):
     if hour == 1: klines = binance_futures.KLINE_INTERVAL_1HOUR()
     elif hour == 6: klines = binance_futures.KLINE_INTERVAL_6HOUR()
     else: 
@@ -26,22 +26,22 @@ def heikin_ashi(hour): # >>> "UP" // "DOWN" // "INDECISIVE"
 
     if (current_Open == current_Low):
         if (price_movement >= threshold):
-            trend = "UP_TREND"
+            trend = "GREEN"
             print(colored(title + trend, "green"))
         else:
-            trend = "NO_TRADE_ZONE" # "WEAK_RED"
+            trend = "WEAK_GREEN" # "WEAK_RED"
             print(colored(title + trend, "green"))
 
     elif (current_Open == current_High):
         if (price_movement >= threshold):
-            trend = "DOWN_TREND"
+            trend = "RED"
             print(colored(title + trend, "red"))
         else:
-            trend = "NO_TRADE_ZONE" # "WEAK_GREEN"
+            trend = "WEAK_RED" # "WEAK_GREEN"
             print(colored(title + trend, "red"))
             
     else:
-        trend = "NO_TRADE_ZONE"
+        trend = "INDECISIVE"
         print(colored(title + trend, "yellow"))
 
     return trend

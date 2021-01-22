@@ -21,23 +21,23 @@ try:
         entry_direction = heikin_ashi(1)
 
         if position_info == "LONGING":
-            if (entry_direction == "DOWN_TREND"):
+            if (entry_direction != "GREEN"):
                 print(title + "💰 CLOSE_LONG 💰")
                 if live_trade: binance_futures.close_position("LONG")
             else: print(colored(title + "HOLDING_LONG", "green"))
 
         elif position_info == "SHORTING":
-            if (entry_direction == "UP_TREND"):
+            if (entry_direction != "RED"):
                 print(title + "💰 CLOSE_SHORT 💰")
                 if live_trade: binance_futures.close_position("SHORT")
             else: print(colored(title + "HOLDING_SHORT", "red"))
 
         else:
-            if main_direction == "UP_TREND" and (entry_direction == "UP_TREND"):
+            if main_direction == "GREEN" and (entry_direction == "GREEN"):
                 print(colored(title + "🚀 GO_LONG 🚀", "green"))
                 if live_trade: binance_futures.open_position("LONG")
 
-            elif main_direction == "DOWN_TREND" and (entry_direction == "DOWN_TREND"):
+            elif main_direction == "RED" and (entry_direction == "RED"):
                 print(colored(title + "💥 GO_SHORT 💥", "red"))
                 if live_trade: binance_futures.open_position("SHORT")
 
