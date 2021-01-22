@@ -8,7 +8,7 @@ while True:
 
     if (input_pair == '1') or (input_pair == 'BTC'):
         coin            = "BTC"
-        quantity        = 0.001     # Minimum 0.001
+        quantity        = 0.001
         leverage        = 15
         threshold       = 1.5
         round_decimal   = 2
@@ -16,7 +16,7 @@ while True:
 
     elif (input_pair == '2') or (input_pair == 'ETH'):
         coin            = "ETH"
-        quantity        = 0.01      # Minimum 0.01
+        quantity        = 0.01
         leverage        = 10
         threshold       = 1.5
         round_decimal   = 2
@@ -24,7 +24,7 @@ while True:
 
     elif (input_pair == '3') or (input_pair == 'LTC'):
         coin            = "LTC"
-        quantity        = 0.05      # Minimum 0.01
+        quantity        = 0.1
         leverage        = 10
         threshold       = 1.5
         round_decimal   = 2

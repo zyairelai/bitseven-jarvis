@@ -1,5 +1,5 @@
 try:
-    live_trade = False
+    live_trade = True
 
     import os
     import time
