@@ -16,17 +16,16 @@ try:
 
     def trade_action():
         title           = "ACTION           :   "
-        position_info   = position_info()
         main_direction  = heikin_ashi(6)
         entry_direction = heikin_ashi(1)
 
-        if position_info == "LONGING":
+        if position_info() == "LONGING":
             if (entry_direction != "GREEN"):
                 print(title + "💰 CLOSE_LONG 💰")
                 if live_trade: binance_futures.close_position("LONG")
             else: print(colored(title + "HOLDING_LONG", "green"))
 
-        elif position_info == "SHORTING":
+        elif position_info() == "SHORTING":
             if (entry_direction != "RED"):
                 print(title + "💰 CLOSE_SHORT 💰")
                 if live_trade: binance_futures.close_position("SHORT")
