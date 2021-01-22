@@ -10,13 +10,13 @@ try:
     import binance_futures
     from datetime import datetime
     from termcolor import colored
+    from position import position_info
     from heikin_ashi import heikin_ashi
-    from get_position import get_position_info
     from binance.exceptions import BinanceAPIException
 
     def trade_action():
         title           = "ACTION           :   "
-        position_info   = get_position_info()
+        position_info   = position_info()
         main_direction  = heikin_ashi(6)
         entry_direction = heikin_ashi(1)
 
