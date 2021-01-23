@@ -15,29 +15,31 @@ try:
     from binance.exceptions import BinanceAPIException
 
     def trade_action():
-        title           = "ACTION           :   "
-        check_position  = position_info()
-        main_direction  = heikin_ashi(6)
-        entry_direction = heikin_ashi(1)
+        title          = "ACTION           :   "
+        check_position = position_info()
+        main_direction = heikin_ashi(6, "ENTRY")
 
         if check_position == "LONGING":
-            if (entry_direction != "GREEN"):
+            exit_direction = heikin_ashi(1, "EXIT")
+            if (exit_direction == "RED"):
                 print(title + "💰 CLOSE_LONG 💰")
                 if live_trade: binance_futures.close_position("LONG")
             else: print(colored(title + "HOLDING_LONG", "green"))
 
         elif check_position == "SHORTING":
-            if (entry_direction != "RED"):
+            exit_direction = heikin_ashi(1, "EXIT")
+            if (exit_direction == "GREEN"):
                 print(title + "💰 CLOSE_SHORT 💰")
                 if live_trade: binance_futures.close_position("SHORT")
             else: print(colored(title + "HOLDING_SHORT", "red"))
 
         else:
-            if main_direction == "GREEN" and (entry_direction == "GREEN"):
+            entry_direction = heikin_ashi(1, "ENTRY")
+            if (main_direction == "GREEN") and (entry_direction == "GREEN"):
                 print(colored(title + "🚀 GO_LONG 🚀", "green"))
                 if live_trade: binance_futures.open_position("LONG")
 
-            elif main_direction == "RED" and (entry_direction == "RED"):
+            elif (main_direction == "RED") and (entry_direction == "RED"):
                 print(colored(title + "💥 GO_SHORT 💥", "red"))
                 if live_trade: binance_futures.open_position("SHORT")
 

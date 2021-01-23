@@ -1,10 +1,16 @@
+import os
 import time
 import config
-from keys import client
 from binance.client import Client
 
 stoplimit    = 0.2
 callbackRate = 0.5
+
+# Get environment variables
+api_owner   = os.environ.get('API_OWNER')
+api_key     = os.environ.get('API_KEY')
+api_secret  = os.environ.get('API_SECRET')
+client      = Client(api_key, api_secret)
 
 def get_timestamp():
     return int(time.time() * 1000)
@@ -18,11 +24,20 @@ def change_leverage():
 def change_margin_to_ISOLATED():
     return client.futures_change_margin_type(symbol=config.pair, marginType="ISOLATED", timestamp=get_timestamp)
 
+def cancel_all_open_orders():
+    client.futures_cancel_all_open_orders(symbol=config.pair, timestamp=get_timestamp())
+
 def account_trades(trades):
     return client.futures_account_trades(symbol=config.pair, timestamp=get_timestamp(), limit=(trades*2))
 
 def KLINE_INTERVAL_1HOUR():
     return client.futures_klines(symbol=config.pair, interval=Client.KLINE_INTERVAL_1HOUR, limit=3)
+
+def KLINE_INTERVAL_2HOUR():
+    return client.futures_klines(symbol=config.pair, interval=Client.KLINE_INTERVAL_2HOUR, limit=3)
+
+def KLINE_INTERVAL_4HOUR():
+    return client.futures_klines(symbol=config.pair, interval=Client.KLINE_INTERVAL_4HOUR, limit=3)
 
 def KLINE_INTERVAL_6HOUR():
     return client.futures_klines(symbol=config.pair, interval=Client.KLINE_INTERVAL_6HOUR, limit=3)

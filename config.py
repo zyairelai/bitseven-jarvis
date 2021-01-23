@@ -36,5 +36,4 @@ pair = coin + "USDT"
 print("Pair Name        :   " + str(pair))
 print("Trade Quantity   :   " + str(quantity) + " " + str(coin))
 print("Leverage         :   " + str(leverage) + "x")
-print("Entry Threshold  :   " + str(threshold) + " %")
-print()
+print("Entry Threshold  :   " + str(threshold) + " %\n")

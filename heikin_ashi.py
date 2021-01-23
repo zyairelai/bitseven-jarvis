@@ -1,8 +1,10 @@
+output = False
+
 import config
 import binance_futures
 from termcolor import colored
 
-def heikin_ashi(hour):
+def heikin_ashi(hour, EXIT):
     if hour == 1: klines = binance_futures.KLINE_INTERVAL_1HOUR()
     elif hour == 6: klines = binance_futures.KLINE_INTERVAL_6HOUR()
     else: 
@@ -21,8 +23,16 @@ def heikin_ashi(hour):
     current_Low     = min(float(klines[2][3]), current_Open, current_Close)
 
     title = str(hour) + " HOUR DIRECTION :   "
-    price_movement = (current_High - current_Low) / current_Open * 100
-    threshold = config.threshold
+    if EXIT == "EXIT": threshold = 0
+    else: threshold = config.threshold
+    price_movement = abs((current_Open - current_Close) / current_Open * 100)
+
+    if output:
+        print("The current_Open is  :   " + str(current_Open))
+        print("The current_Close is :   " + str(current_Close))
+        print("The current_High is  :   " + str(current_High))
+        print("The current_Low is   :   " + str(current_Low))
+        print("The price_movement is:   " + str(price_movement))
 
     if (current_Open == current_Low):
         if (price_movement >= threshold):
