@@ -3,6 +3,8 @@ while True:
     print("1. BTC-USDT")
     print("2. ETH-USDT")
     print("3. LTC-USDT")
+    print("4. BCH-USDT")
+    print("5. LINK-USDT")
 
     input_pair = input("\nChoose your Pair :   ").upper() or 'BTC'
 
@@ -29,6 +31,31 @@ while True:
         threshold       = 1.5
         round_decimal   = 2
         break
+
+    elif (input_pair == '4') or (input_pair == 'BCH'):
+        coin            = "BCH"
+        quantity        = 0.05
+        leverage        = 15
+        threshold       = 1.5
+        round_decimal   = 2
+        break
+
+    elif (input_pair == '5') or (input_pair == 'LINK'):
+        coin            = "LINK"
+        quantity        = 1
+        leverage        = 15
+        threshold       = 1.5
+        round_decimal   = 3
+        break
+
+    elif (input_pair == '6') or (input_pair == 'SUSHI'):
+        coin            = "SUSHI"
+        quantity        = 2
+        leverage        = 10
+        threshold       = 1.5
+        round_decimal   = 4
+        break
+
     else: print("❗Invalid Number❗Try again❗\n")
 
 pair = coin + "USDT"
