@@ -1,3 +1,5 @@
+output = False
+
 while True:
     print("\nHere are the supported Pairs: ")
     print("1. BTC-USDT")
@@ -5,6 +7,7 @@ while True:
     print("3. LTC-USDT")
     print("4. BCH-USDT")
     print("5. LINK-USDT")
+    print("6. SUSHI-USDT")
 
     input_pair = input("\nChoose your Pair :   ").upper() or 'BTC'
 

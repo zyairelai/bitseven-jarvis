@@ -1,5 +1,3 @@
-output = True
-
 import config
 import binance_futures
 from termcolor import colored
@@ -27,7 +25,7 @@ def heikin_ashi(hour, EXIT):
     else: threshold = config.threshold
     price_movement = abs((current_Open - current_Close) / current_Open * 100)
 
-    if output:
+    if config.output:
         print("The current_Open is  :   " + str(current_Open))
         print("The current_Close is :   " + str(current_Close))
         print("The current_High is  :   " + str(current_High))
