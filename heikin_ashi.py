@@ -42,7 +42,7 @@ def heikin_ashi(hour):
         print(colored(title + trend, "red"))
 
     else:
-        trend = "INDECISIVE"
+        trend = "NO_TRADE_ZONE"
         print(colored(title + trend, "yellow"))
 
     return trend

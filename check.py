@@ -11,8 +11,8 @@ def check():
         if (input_num == '1'):
             start = time.time()
             from heikin_ashi import heikin_ashi
-            heikin_ashi(6)
-            heikin_ashi(1)
+            input_hour = input("Enter hour (1, 2, 4, 6) : ") or 6
+            print("\nThe <heikin_ashi.py> return value is : " + heikin_ashi(int(input_hour)))
             print(f"Time Taken: {time.time() - start} seconds\n")
             break
 
