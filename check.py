@@ -11,8 +11,8 @@ def check():
         if (input_num == '1'):
             start = time.time()
             from heikin_ashi import heikin_ashi
-            heikin_ashi(6, "CHECK")
-            heikin_ashi(1, "CHECK")
+            heikin_ashi(6)
+            heikin_ashi(1)
             print(f"Time Taken: {time.time() - start} seconds\n")
             break
 

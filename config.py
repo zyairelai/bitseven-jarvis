@@ -13,31 +13,31 @@ while True:
 
     if (input_pair == '1') or (input_pair == 'BTC'):
         coin            = "BTC"
-        quantity        = 0.001
-        leverage        = 15
+        quantity        = 0.001 # 1.29 USDT @ 32000
+        leverage        = 25
         threshold       = 1.5
         round_decimal   = 2
         break
 
     elif (input_pair == '2') or (input_pair == 'ETH'):
         coin            = "ETH"
-        quantity        = 0.01
-        leverage        = 10
+        quantity        = 0.02  # 1.24 USDT @ 12XX
+        leverage        = 20    
         threshold       = 1.5
         round_decimal   = 2
         break
 
     elif (input_pair == '3') or (input_pair == 'LTC'):
         coin            = "LTC"
-        quantity        = 0.1
-        leverage        = 10
+        quantity        = 0.15  # 1.40 USDT @ 140      
+        leverage        = 15
         threshold       = 1.5
         round_decimal   = 2
         break
 
     elif (input_pair == '4') or (input_pair == 'BCH'):
         coin            = "BCH"
-        quantity        = 0.05
+        quantity        = 0.05  # 1.44 USDT @ 430
         leverage        = 15
         threshold       = 1.5
         round_decimal   = 2
@@ -45,7 +45,7 @@ while True:
 
     elif (input_pair == '5') or (input_pair == 'LINK'):
         coin            = "LINK"
-        quantity        = 1
+        quantity        = 1     # 1.62 USDT @ 24.XX
         leverage        = 15
         threshold       = 1.5
         round_decimal   = 3
@@ -53,7 +53,7 @@ while True:
 
     elif (input_pair == '6') or (input_pair == 'SUSHI'):
         coin            = "SUSHI"
-        quantity        = 2
+        quantity        = 2     # 1.42 USDT @ 7.XX
         leverage        = 10
         threshold       = 1.5
         round_decimal   = 4
