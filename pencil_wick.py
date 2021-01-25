@@ -2,7 +2,7 @@ import config
 import binance_futures
 from termcolor import colored
 
-def pencil_wick_test(hour, color):
+def pencil_wick_test(hour, CANDLE):
     title  = "PENCIL WICK TEST :   "
     if hour == 6: klines = binance_futures.KLINE_INTERVAL_6HOUR()
     elif hour == 1: klines = binance_futures.KLINE_INTERVAL_1HOUR()
