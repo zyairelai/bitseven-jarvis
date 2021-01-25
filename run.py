@@ -1,5 +1,6 @@
 try:
     live_trade = True
+    trailing_stop = False
 
     import os
     import time
@@ -38,11 +39,15 @@ try:
         else:
             if (main_direction == "GREEN") and (mini_direction == "GREEN") and (entry_direction == "GREEN") and (pencil_wick_test(6, "GREEN") == "PASS"):
                 print(colored(title + "🚀 GO_LONG 🚀", "green"))
-                if live_trade: binance_futures.open_position("LONG")
+                if live_trade: 
+                    binance_futures.open_position("LONG")
+                    if trailing_stop: binance_futures.set_trailing_stop("LONG")
 
             elif (main_direction == "RED") and (mini_direction == "RED") and (entry_direction == "RED") and (pencil_wick_test(6, "RED") == "PASS"):
                 print(colored(title + "💥 GO_SHORT 💥", "red"))
-                if live_trade: binance_futures.open_position("SHORT")
+                if live_trade: 
+                    binance_futures.open_position("SHORT")
+                    if trailing_stop: binance_futures.set_trailing_stop("SHORT")
 
             else: print(title + "🐺 WAIT 🐺")
 
@@ -58,7 +63,7 @@ try:
         try:
             if live_trade:
                 scheduler = BlockingScheduler()
-                scheduler.add_job(trade_action, 'cron', minute='40')
+                scheduler.add_job(trade_action, 'cron', minute='0,30')
                 scheduler.start()
             else:
                 trade_action()
