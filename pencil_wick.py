@@ -25,13 +25,21 @@ def pencil_wick_test(hour, color):
     current_High    = max(float(klines[2][2]), current_Open, current_Close)
     current_Low     = min(float(klines[2][3]), current_Open, current_Close)
 
-    if color == "GREEN":
-        if current_High > previous_High: result = "PASS"
-        else: result = "FAIL"
+    threshold = 1
 
-    elif color == "RED":
-        if current_Low < previous_Low: result = "PASS"
-        else: result = "FAIL"
+    if CANDLE == "GREEN":
+        if current_High < previous_High:
+            if ((current_High - previous_High) / current_High * 100) < threshold:
+                result = "PASS"
+            else: result = "FAIL"
+        else: result = "PASS"
+
+    elif CANDLE == "RED":
+        if current_Low > previous_Low:
+            if ((previous_Low - current_Low) / previous_Low * 100) < threshold:
+                result = "PASS"
+            else: result = "FAIL"
+        else: result = "PASS"
 
     if result == "PASS": print(colored(title + result, "green"))
     else: print(colored(title + result, "red"))
