@@ -1,8 +1,6 @@
 output = False
-check_how_many_trades = 100
-main_hour   = 6
-support_dir = 1
 callbackRate = 1.5
+check_how_many_trades = 100
 
 while True:
     print("\nHere are the supported Pairs: ")
