@@ -1,6 +1,6 @@
 try:
     live_trade = True
-    trailing_stop = True
+    trailing_stop = False
 
     import os
     import time
@@ -22,7 +22,7 @@ try:
         check_position = position_info()
         main_direction = heikin_ashi(6)
         mini_direction = heikin_ashi(1)
-        entry_direction= heikin_ashi(30)
+        entry_confirmation = heikin_ashi(30)
 
         if check_position == "LONGING":
             if (main_direction != "GREEN") or (pencil_wick_test(6, "GREEN") == "FAIL"):
@@ -37,13 +37,13 @@ try:
             else: print(colored(title + "HOLDING_SHORT", "red"))
 
         else:
-            if (main_direction == "GREEN") and (mini_direction == "GREEN") and (entry_direction == "GREEN") and (pencil_wick_test(6, "GREEN") == "PASS"):
+            if (main_direction == "GREEN") and (mini_direction == "GREEN") and (entry_confirmation == "GREEN") and (pencil_wick_test(6, "GREEN") == "PASS"):
                 print(colored(title + "🚀 GO_LONG 🚀", "green"))
                 if live_trade: 
                     binance_futures.open_position("LONG")
                     if trailing_stop: binance_futures.set_trailing_stop("LONG")
 
-            elif (main_direction == "RED") and (mini_direction == "RED") and (entry_direction == "RED") and (pencil_wick_test(6, "RED") == "PASS"):
+            elif (main_direction == "RED") and (mini_direction == "RED") and (entry_confirmation == "RED") and (pencil_wick_test(6, "RED") == "PASS"):
                 print(colored(title + "💥 GO_SHORT 💥", "red"))
                 if live_trade: 
                     binance_futures.open_position("SHORT")
@@ -64,7 +64,7 @@ try:
         try:
             if live_trade:
                 scheduler = BlockingScheduler()
-                scheduler.add_job(trade_action, 'cron', minute='0,30')
+                scheduler.add_job(trade_action, 'cron', minute='0,5,10,15,20,25,30,35,40,45,50,55')
                 scheduler.start()
             else:
                 trade_action()
