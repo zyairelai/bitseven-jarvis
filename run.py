@@ -1,6 +1,6 @@
 try:
     live_trade = True
-    trailing_stop = False
+    trailing_stop = True
 
     import os
     import time
@@ -54,10 +54,11 @@ try:
         print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
 
     # Initialize SETUP
-    if binance_futures.position_information()[0].get('marginType') != "isolated": binance_futures.change_margin_to_ISOLATED()
-    if int(binance_futures.position_information()[0].get("leverage")) != config.leverage:
-        binance_futures.change_leverage()
-        print("Changed Leverage :   " + binance_futures.position_information()[0].get("leverage") + "x\n")
+    if live_trade:
+        if binance_futures.position_information()[0].get('marginType') != "isolated": binance_futures.change_margin_to_ISOLATED()
+        if int(binance_futures.position_information()[0].get("leverage")) != config.leverage:
+            binance_futures.change_leverage()
+            print(colored("CHANGED LEVERAGE :   " + binance_futures.position_information()[0].get("leverage") + "x\n", "red"))
 
     while True:
         try:
@@ -69,14 +70,15 @@ try:
                 trade_action()
                 time.sleep(3)
 
-        except (BinanceAPIException,
-                ConnectionResetError,
-                socket.timeout,
-                urllib3.exceptions.ProtocolError,
-                urllib3.exceptions.ReadTimeoutError,
-                requests.exceptions.ConnectionError,
-                requests.exceptions.ConnectTimeout,
-                requests.exceptions.ReadTimeout) as e:
+        except Exception as e:
+        # except (BinanceAPIException,
+                # ConnectionResetError,
+                # socket.timeout,
+                # urllib3.exceptions.ProtocolError,
+                # urllib3.exceptions.ReadTimeoutError,
+                # requests.exceptions.ConnectionError,
+                # requests.exceptions.ConnectTimeout,
+                # requests.exceptions.ReadTimeout) as e:
 
             if not os.path.exists("Error_Message"): os.makedirs("Error_Message")
             with open((os.path.join("Error_Message", config.pair + ".txt")), "a") as error_message:

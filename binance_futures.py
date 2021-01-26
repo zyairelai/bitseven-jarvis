@@ -55,7 +55,7 @@ def close_position(position):
         client.futures_create_order(symbol=config.pair, side="BUY", type="MARKET", quantity=config.quantity, timestamp=get_timestamp())
 
 def set_trailing_stop(position):
-    callbackRate = 2 
+    callbackRate = config.callbackRate
     if position == "LONG":
         client.futures_create_order(symbol=config.pair, side="SELL", type="TRAILING_STOP_MARKET", callbackRate=callbackRate, quantity=config.quantity, timestamp=get_timestamp())
     elif position == "SHORT":
