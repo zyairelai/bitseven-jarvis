@@ -70,15 +70,15 @@ try:
                 trade_action()
                 time.sleep(3)
 
-        except Exception as e:
-        # except (BinanceAPIException,
-                # ConnectionResetError,
-                # socket.timeout,
-                # urllib3.exceptions.ProtocolError,
-                # urllib3.exceptions.ReadTimeoutError,
-                # requests.exceptions.ConnectionError,
-                # requests.exceptions.ConnectTimeout,
-                # requests.exceptions.ReadTimeout) as e:
+        # except Exception as e:
+        except (BinanceAPIException,
+                ConnectionResetError,
+                socket.timeout,
+                urllib3.exceptions.ProtocolError,
+                urllib3.exceptions.ReadTimeoutError,
+                requests.exceptions.ConnectionError,
+                requests.exceptions.ConnectTimeout,
+                requests.exceptions.ReadTimeout) as e:
 
             if not os.path.exists("Error_Message"): os.makedirs("Error_Message")
             with open((os.path.join("Error_Message", config.pair + ".txt")), "a") as error_message:
