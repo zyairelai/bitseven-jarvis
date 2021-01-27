@@ -1,5 +1,5 @@
 output = False
-callbackRate = 1.5
+callbackRate = 2
 check_how_many_trades = 5
 
 while True:
@@ -19,14 +19,14 @@ while True:
 
     if (input_pair == '1') or (input_pair == 'BTC'):
         coin            = "BTC"
-        quantity        = 0.001 # 1.29 USDT @ 32000
-        leverage        = 25
+        quantity        = 0.001 # 1.04 USDT @ 30XXX
+        leverage        = 30
         round_decimal   = 2
         break
 
     elif (input_pair == '2') or (input_pair == 'ETH'):
         coin            = "ETH"
-        quantity        = 0.02  # 1.24 USDT @ 12XX
+        quantity        = 0.01  # 0.65 USDT @ 12XX
         leverage        = 20
         round_decimal   = 2
         break

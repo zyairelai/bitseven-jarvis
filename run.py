@@ -32,22 +32,23 @@ try:
 
     def trade_action():
         main_hour      = 6
+        mini_hour      = 4
 
         title          = "ACTION           :   "
         check_position = position_info()
         
         main_direction = heikin_ashi(main_hour)
-        mini_direction = heikin_ashi(1)
-        entry_confirmation = heikin_ashi(30)
+        mini_direction = heikin_ashi(mini_hour)
+        entry_confirmation = heikin_ashi(1)
 
         if check_position == "LONGING":
-            if (main_direction != "GREEN") or (pencil_wick_test(main_hour, "GREEN") == "FAIL"):
+            if (main_direction != "GREEN") or (mini_direction != "GREEN") or (pencil_wick_test(main_hour, "GREEN") == "FAIL"):
                 print(title + "💰 CLOSE_LONG 💰")
                 if live_trade: binance_futures.close_position("LONG")
             else: print(colored(title + "HOLDING_LONG", "green"))
 
         elif check_position == "SHORTING":
-            if (main_direction != "RED") or (pencil_wick_test(main_hour, "RED") == "FAIL"):
+            if (main_direction != "RED") or (mini_direction != "RED") or (pencil_wick_test(main_hour, "RED") == "FAIL"):
                 print(title + "💰 CLOSE_SHORT 💰")
                 if live_trade: binance_futures.close_position("SHORT")
             else: print(colored(title + "HOLDING_SHORT", "red"))
