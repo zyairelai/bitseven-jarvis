@@ -16,14 +16,14 @@ try:
 
     print()
 
-    prompt_live  = input("Enable Live Trade? [Y/n] ")
-    if prompt_live == 'Y': 
+    prompt_LIVE = input("Enable Live Trade? [Y/n] ")
+    if prompt_LIVE == 'Y': 
         live_trade = True
         print(colored("Live Trade Enabled", "green"))
     else: live_trade = False
 
-    prompt_tstop = input("Enable Trailing Stop? [Y/n] ")
-    if prompt_tstop == 'Y': 
+    prompt_TSL = input("Enable Trailing Stop? [Y/n] ")
+    if prompt_TSL == 'Y': 
         trailing_stop = True
         print(colored("Trailing Stop Enabled", "green"))
     else: trailing_stop = False
