@@ -31,8 +31,8 @@ try:
     print()
 
     def trade_action():
-        main_hour      = 6
-        mini_hour      = 4
+        main_hour = 6
+        mini_hour = 4
 
         title          = "ACTION           :   "
         check_position = position_info()
@@ -82,8 +82,7 @@ try:
         try:
             if live_trade:
                 scheduler = BlockingScheduler()
-                if trailing_stop: scheduler.add_job(trade_action, 'cron', minute='0,30')
-                if not trailing_stop: scheduler.add_job(trade_action, 'cron', minute='0,5,10,15,20,25,30,35,40,45,50,55')
+                scheduler.add_job(trade_action, 'cron', minute='0,5,10,15,20,25,30,35,40,45,50,55')
                 scheduler.start()
             else:
                 trade_action()
