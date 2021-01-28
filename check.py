@@ -12,8 +12,8 @@ def check():
             start = time.time()
             from heikin_ashi import heikin_ashi
             heikin_ashi(6)
+            heikin_ashi(4)
             heikin_ashi(1)
-            heikin_ashi(30)
             print(f"Time Taken: {time.time() - start} seconds\n")
             break
 

@@ -1,5 +1,5 @@
 output = False
-callbackRate = 2
+callbackRate    = 3
 check_how_many_trades = 5
 
 while True:
@@ -22,6 +22,7 @@ while True:
         quantity        = 0.001 # 1.04 USDT @ 30XXX
         leverage        = 30
         round_decimal   = 2
+        callbackRate    = 3
         break
 
     elif (input_pair == '2') or (input_pair == 'ETH'):
@@ -64,6 +65,7 @@ while True:
         quantity        = 2     # 1.42 USDT @ 7.XX
         leverage        = 10
         round_decimal   = 4
+        callbackRate    = 5
         break
 
     elif (input_pair == '8') or (input_pair == 'TRX'):
