@@ -1,5 +1,5 @@
-output = False
-callbackRate    = 3
+output = True
+callbackRate = 3
 check_how_many_trades = 5
 
 while True:

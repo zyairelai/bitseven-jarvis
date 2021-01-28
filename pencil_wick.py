@@ -25,7 +25,7 @@ def pencil_wick_test(hour, CANDLE):
     current_High    = max(float(klines[2][2]), current_Open, current_Close)
     current_Low     = min(float(klines[2][3]), current_Open, current_Close)
 
-    threshold = 1
+    threshold = 1.5
 
     if CANDLE == "GREEN":
         if current_High < previous_High:
