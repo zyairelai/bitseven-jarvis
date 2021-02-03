@@ -1,6 +1,5 @@
-# heikin-ashi-10x
-A side project that inherits my main trading strategy.  
-Use this at your own risk!
+# leverage-bot
+Leverage Trading Bot on Binance Futures. 
 
 ## 1. Environment Setup
 Paste the following into your Default Shell
@@ -23,6 +22,10 @@ pip3 install termcolor==1.1.0
 Let's make the magic happens!
 ```
 python3 run.py
+```
+To check the trend and many others:
+```
+python3 check.py
 ```
 
 ## 4. Donate for MORE!!
