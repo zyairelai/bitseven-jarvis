@@ -10,10 +10,10 @@ def check():
 
         if (input_num == '1'):
             start = time.time()
-            from heikin_ashi import heikin_ashi
-            heikin_ashi(6)
-            heikin_ashi(4)
-            heikin_ashi(1)
+            import heikin_ashi
+            heikin_ashi.get_clear_direction(6)
+            heikin_ashi.get_hour(4)
+            heikin_ashi.get_hour(1)
             print(f"Time Taken: {time.time() - start} seconds\n")
             break
 

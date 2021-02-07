@@ -2,15 +2,8 @@ import config
 import binance_futures
 from termcolor import colored
 
-def pencil_wick_test(hour, CANDLE):
-    title  = "PENCIL WICK TEST :   "
-    if hour == 6: klines = binance_futures.KLINE_INTERVAL_6HOUR()
-    elif hour == 1: klines = binance_futures.KLINE_INTERVAL_1HOUR()
-    elif hour == 2: klines = binance_futures.KLINE_INTERVAL_2HOUR()
-    elif hour == 4: klines = binance_futures.KLINE_INTERVAL_4HOUR()
-    else: 
-        hour = 30
-        klines = binance_futures.KLINE_INTERVAL_30MINUTE()
+def pencil_wick_test(CANDLE):
+    klines = binance_futures.KLINE_INTERVAL_1MINUTE()
 
     first_run_Open  = round(((float(klines[0][1]) + float(klines[0][4])) / 2), config.round_decimal)
     first_run_Close = round(((float(klines[0][1]) + float(klines[0][2]) + float(klines[0][3]) + float(klines[0][4])) / 4), config.round_decimal)
@@ -27,23 +20,27 @@ def pencil_wick_test(hour, CANDLE):
     current_High    = max(float(klines[3][2]), current_Open, current_Close)
     current_Low     = min(float(klines[3][3]), current_Open, current_Close)
 
-    threshold = 1.5
-
     if CANDLE == "GREEN":
+        previous_wick = previous_High - previous_Close
+        current_wick  = current_High - current_Close
+        title  = "PENCIL WICK GREEN:   "
+
         if current_High < previous_High:
-            if ((current_High - previous_High) / current_High * 100) < threshold:
-                result = "PASS"
-            else: result = "FAIL"
+            if current_wick < (previous_wick/2): result = "FAIL"
+            else: result = "PASS"
         else: result = "PASS"
 
     elif CANDLE == "RED":
+        previous_wick = previous_Close - previous_Low
+        current_wick  = current_Close - current_Low
+        title  = "PENCIL WICK RED  :   "
+
         if current_Low > previous_Low:
-            if ((previous_Low - current_Low) / previous_Low * 100) < threshold:
-                result = "PASS"
-            else: result = "FAIL"
+            if current_wick < (previous_wick/2): result = "FAIL"
+            else: result = "PASS"
         else: result = "PASS"
 
     if result == "PASS": print(colored(title + result, "green"))
     else: print(colored(title + result, "red"))
 
-    return result 
+    return result
