@@ -1,12 +1,25 @@
 # leverage-bot
-Leverage Trading Bot on Binance Futures. 
+Leverage Trading Bot on Binance Futures inherited from [futures-omax](https://github.com/zyairelai/futures-omax)
+
+# DISCLAIMER
+This automation software is purely handcoded by me [@zyairelai](https://github.com/zyairelai) from scratch with my personal manual trading strategy.  
+Kindly provide feedback through my email `zyairelai@gmail.com` if you are using my repository.  
+If you had modified or improved my code feel free to share with me and we may have futher discussion on this project!  
+Anybody may copy, redistribute, modify of the software. However, limited to NON-COMMERCIAL USED only.  
+LEVERAGE TRADING IS A HIGH RISK GAME. PLEASE MANAGE YOUR RISK LEVEL BEFORE USING MY SCRIPT.
 
 ## 1. Environment Setup
 Paste the following into your Default Shell
 ```
-export API_OWNER="your_binance_username"
 export API_KEY="your_binance_api_key"
 export API_SECRET="your_binance_secret_key"
+```
+
+Or as an alternative, you can change `line 7-9` in `binance_futures.py` to following: 
+```
+api_key     = "your_binance_api_key"
+api_secret  = "your_binance_secret_key"
+client      = Client(api_key, api_secret)
 ```
 
 ## 2. Pip3 Requirements
@@ -23,7 +36,7 @@ Let's make the magic happens!
 ```
 python3 run.py
 ```
-To check the trend and many others:
+To check the trend, position, realizedPNL and many others:
 ```
 python3 check.py
 ```
