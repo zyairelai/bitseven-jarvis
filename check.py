@@ -11,12 +11,11 @@ def check():
 
         if (input_num == '1'):
             start = time.time()
-            from heikin_ashi import get_hour
-            from heikin_ashi import clear_direction
-            get_hour(1)
-            get_hour(2)
-            get_hour(4)
-            clear_direction()
+            import heikin_ashi
+            heikin_ashi.get_hour(1)
+            heikin_ashi.get_hour(2)
+            heikin_ashi.get_hour(4)
+            heikin_ashi.get_clear_direction()
             print(f"Time Taken: {time.time() - start} seconds\n")
             break
 
@@ -25,14 +24,14 @@ def check():
             loop = input("Do you want to loop? [Y/n]") or 'n'
             if loop == 'Y':
                 while True:
-                    heikin_ashi.current_minute(1)
-                    heikin_ashi.current_minute(5)
+                    heikin_ashi.get_current_minute(1)
+                    heikin_ashi.get_current_minute(5)
                     print()
                     time.sleep(3)
             else:
                 start = time.time()
-                heikin_ashi.current_minute(1)
-                heikin_ashi.current_minute(5)
+                heikin_ashi.get_current_minute(1)
+                heikin_ashi.get_current_minute(5)
                 print(f"Time Taken: {time.time() - start} seconds\n")
             break
 

@@ -3,7 +3,7 @@ import binance_futures
 from datetime import datetime
 from termcolor import colored
 
-def clear_direction():
+def get_clear_direction():
     klines = binance_futures.KLINE_INTERVAL_6HOUR()
 
     first_run_Open  = round(((float(klines[0][1]) + float(klines[0][4])) / 2), config.round_decimal)
@@ -91,7 +91,7 @@ def get_hour(hour):
 
     return current_hour
 
-def current_minute(minute):
+def get_current_minute(minute):
     if minute == 1: klines = klines = binance_futures.KLINE_INTERVAL_1MINUTE()
     elif minute == 3: klines = klines = binance_futures.KLINE_INTERVAL_3MINUTE()
     elif minute == 5: klines = klines = binance_futures.KLINE_INTERVAL_5MINUTE()
