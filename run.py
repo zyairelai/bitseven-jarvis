@@ -18,13 +18,7 @@ try:
         binance_futures.change_leverage(config.leverage)
         print(colored("CHANGED LEVERAGE :   " + binance_futures.position_information()[0].get("leverage") + "x\n", "red"))
 
-    both_direction = input("Trade by Following Trend (1) or Trade Both Direction (2) : ") or '1'
-    if both_direction == '1': print(colored("Trading by Following Trend\n", "green"))
-    else: print(colored("Trading Both Direction\n", "red"))
-
-    def added_to_job():
-        if both_direction == '1': dead_or_alive.dead_or_alive()
-        else: dead_or_alive.fomo()
+    def added_to_job(): dead_or_alive.dead_or_alive()
 
     while True:
         try:
