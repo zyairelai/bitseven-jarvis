@@ -15,11 +15,12 @@ def dead_or_alive():
     else: direction = heikin_ashi.get_hour(6)
     five_minute   = heikin_ashi.current_minute(5)
     one_minute    = heikin_ashi.current_minute(1)
+    exit_minute   = heikin_ashi.exit_minute()
 
     if position_info == "LONGING":
         if use_stoploss:
             if binance_futures.get_open_orders() == []: binance_futures.set_stop_loss("LONG", percentage)
-        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_LONG(five_minute)):
+        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_LONG(exit_minute)):
             print("ACTION           :   💰 CLOSE_LONG 💰")
             binance_futures.close_position("LONG")
         else: print(colored("ACTION           :   HOLDING_LONG", "green"))
@@ -27,7 +28,7 @@ def dead_or_alive():
     elif position_info == "SHORTING":
         if use_stoploss:
             if binance_futures.get_open_orders() == []: binance_futures.set_stop_loss("SHORT", percentage)
-        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_SHORT(five_minute)):
+        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_SHORT(exit_minute)):
             print("ACTION           :   💰 CLOSE_SHORT 💰")
             binance_futures.close_position("SHORT")
         else: print(colored("ACTION           :   HOLDING_SHORT", "red"))
@@ -56,15 +57,16 @@ def fomo():
     else: direction = heikin_ashi.get_hour(6)
     five_minute   = heikin_ashi.current_minute(5)
     one_minute    = heikin_ashi.current_minute(1)
+    exit_minute   = heikin_ashi.exit_minute()
 
     if position_info == "LONGING":
-        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_LONG(five_minute)):
+        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_LONG(exit_minute)):
             print("ACTION           :   💰 CLOSE_LONG 💰")
             binance_futures.close_position("LONG")
         else: print(colored("ACTION           :   HOLDING_LONG", "green"))
 
     elif position_info == "SHORTING":
-        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_SHORT(five_minute)):
+        if ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_SHORT(exit_minute)):
             print("ACTION           :   💰 CLOSE_SHORT 💰")
             binance_futures.close_position("SHORT")
         else: print(colored("ACTION           :   HOLDING_SHORT", "red"))
