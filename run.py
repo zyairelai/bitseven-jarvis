@@ -1,6 +1,6 @@
 try:
-    import os, time, requests, socket, urllib3, config
-    import heikin_ashi, strategy, binance_futures
+    import os, time, requests, socket, urllib3
+    import config, binance_futures, strategy
     from datetime import datetime
     from termcolor import colored
     from binance.exceptions import BinanceAPIException
@@ -11,7 +11,9 @@ try:
         binance_futures.change_leverage(config.leverage)
         print(colored("CHANGED LEVERAGE :   " + binance_futures.position_information()[0].get("leverage") + "x\n", "red"))
 
-    def added_to_job(): strategy.dead_or_alive()
+    def added_to_job(): 
+        # strategy.dead_or_alive()
+        strategy.one_shot_one_kill()
 
     while True:
         try:
@@ -19,12 +21,13 @@ try:
             time.sleep(5)
 
             # scheduler = BlockingScheduler()
-            # scheduler.add_job(added_to_job, 'cron', second='0,6,12,18,24,30,36,42,48,54')
+            # scheduler.add_job(added_to_job, 'cron', second='0,10,20,30,40,50')
             # scheduler.start()
 
-        except (BinanceAPIException,
-                ConnectionResetError,
+        except (KeyError,
                 socket.timeout,
+                BinanceAPIException,
+                ConnectionResetError,
                 urllib3.exceptions.ProtocolError,
                 urllib3.exceptions.ReadTimeoutError,
                 requests.exceptions.ConnectionError,
