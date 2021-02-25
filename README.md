@@ -1,3 +1,5 @@
+# IT IS NOT COMPLETE YET DO NOT USE THIS REPOSITORY
+
 # leverage-bot
 Spot Trading For [Binance Leverage Token](https://www.binance.com/en/leveraged-tokens/tokens/allTokens) inherited from [futures-omax](https://github.com/zyairelai/futures-omax)
 
@@ -15,7 +17,7 @@ export API_KEY="your_binance_api_key"
 export API_SECRET="your_binance_secret_key"
 ```
 
-Or as an alternative, you can change `line 7-9` in `binance_futures.py` to following: 
+Or as an alternative, you can change `line 7-9` in `binance_spot.py` to following: 
 ```
 api_key     = "your_binance_api_key"
 api_secret  = "your_binance_secret_key"

@@ -1,9 +1,9 @@
 import config
 import heikin_ashi
-import binance_futures
+import binance_spot
 
 def calculate_trade_amount():
-    # klines       = binance_futures.KLINE_INTERVAL_6HOUR()
+    # klines       = binance_spot.KLINE_INTERVAL_6HOUR()
     # first_six    = heikin_ashi.first_candle(klines)
     # previous_six = heikin_ashi.previous_candle(klines)
     # current_six  = heikin_ashi.current_candle(klines)
@@ -12,9 +12,9 @@ def calculate_trade_amount():
     # elif (first_six != "RED")   and (previous_six == "RED")   and (current_six == "RED")    : six_hour = "SAFE"
     # else: six_hour = "NOT_SURE"
 
-    firstrun_volume = binance_futures.get_volume("FIRSTRUN", "6HOUR")
-    previous_volume = binance_futures.get_volume("PREVIOUS", "6HOUR")
-    current_volume  = binance_futures.get_volume("CURRENT", "6HOUR")
+    firstrun_volume = binance_spot.get_volume("FIRSTRUN", "6HOUR")
+    previous_volume = binance_spot.get_volume("PREVIOUS", "6HOUR")
+    current_volume  = binance_spot.get_volume("CURRENT", "6HOUR")
 
     if (firstrun_volume > previous_volume) and (previous_volume > current_volume): mode = "DANGER"
     elif (current_volume > previous_volume) and (previous_volume > firstrun_volume): mode = "SAFE"
@@ -26,7 +26,7 @@ def calculate_trade_amount():
     return trade_amount
 
 def old_trade_amount():
-    six_hour = binance_futures.KLINE_INTERVAL_6HOUR()
+    six_hour = binance_spot.KLINE_INTERVAL_6HOUR()
 
     if   (heikin_ashi.previous_Open(six_hour) == heikin_ashi.previous_Low(six_hour)) : previous_direction = "GREEN"
     elif (heikin_ashi.previous_Open(six_hour) == heikin_ashi.previous_High(six_hour)): previous_direction = "RED"
@@ -36,7 +36,7 @@ def old_trade_amount():
     elif (heikin_ashi.current_Open(six_hour) == heikin_ashi.current_High(six_hour)): current_direction = "RED"
     else: current_direction = "INDECISIVE"
 
-    markPrice = float(binance_futures.position_information()[0].get("markPrice"))
+    markPrice = float(binance_spot.position_information()[0].get("markPrice"))
 
     if (previous_direction != "INDECISIVE") and (current_direction == "GREEN"):
         if heikin_ashi.current_High(six_hour) > heikin_ashi.previous_High(six_hour):

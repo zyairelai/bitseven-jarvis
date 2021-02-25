@@ -1,96 +1,62 @@
+import os
 import config
 import entry_exit
 import heikin_ashi
-import get_position
-import trade_amount
-import binance_futures
 from datetime import datetime
 from termcolor import colored
+from binance.client import Client
 
-volume_prefix = 5
+# Get environment variables
+api_key     = os.environ.get('API_KEY')
+api_secret  = os.environ.get('API_SECRET')
+client      = Client(api_key, api_secret)
 
-def dead_or_alive():
-    position_info = get_position.get_position_info()
-    direction    = heikin_ashi.get_clear_direction(6)
-    one_hour     = heikin_ashi.get_hour(1)
-    five_minute  = heikin_ashi.get_current_minute(5)
-    one_minute   = heikin_ashi.get_current_minute(1)
+def KLINE_INTERVAL_12HOUR(): return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_12HOUR)
+def first_run_volume(): return float(KLINE_INTERVAL_12HOUR()[-3][5]) 
+def previous_volume(): return float(KLINE_INTERVAL_12HOUR()[-2][5]) 
+def current_volume(): return float(KLINE_INTERVAL_12HOUR()[-1][5]) 
 
-    if position_info == "LONGING":
-        if entry_exit.DIRECTION_CHANGE_EXIT_LONG(one_hour) or ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_LONG()):
-            print("ACTION           :   💰 CLOSE_LONG 💰")
-            binance_futures.close_position("LONG")
-        else: print(colored("ACTION           :   HOLDING_LONG", "green"))
 
-    elif position_info == "SHORTING":
-        if entry_exit.DIRECTION_CHANGE_EXIT_SHORT(one_hour) or ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_SHORT()):
-            print("ACTION           :   💰 CLOSE_SHORT 💰")
-            binance_futures.close_position("SHORT")
-        else: print(colored("ACTION           :   HOLDING_SHORT", "red"))
+def lets_make_some_money():
+    direction = KLINE_INTERVAL_12HOUR()
 
-    else:
-        binance_futures.cancel_all_open_orders()
-        firstrun_volume = binance_futures.get_volume("FIRSTRUN", "6HOUR")
-        previous_volume = binance_futures.get_volume("PREVIOUS", "6HOUR")
-        current_volume  = binance_futures.get_volume("CURRENT", "6HOUR")
-
-        if   (firstrun_volume < previous_volume) and (previous_volume < current_volume): trade_amount = config.quantity * 3
-        elif (firstrun_volume > previous_volume) and (previous_volume > current_volume): trade_amount = config.quantity * 1
-        else:
-            if current_volume > previous_volume: trade_amount = config.quantity * 2
-            else: trade_amount = config.quantity * 1
-
-        if direction == "GREEN" and ((previous_volume / volume_prefix) > current_volume):
-            if entry_exit.GO_LONG(one_minute, five_minute, one_hour):
+    if direction == "GREEN" and ((previous_volume() / 5) < current_volume()):
+        if quote_asset_balance("UP") < config.qty_in_USDT:
+            trade_amount = config.qty_in_USDT - quote_asset_balance("UP")
+            if trade_amount >= 10:
                 print(colored("ACTION           :   🚀 GO_LONG 🚀", "green"))
-                if config.live_trade: binance_futures.open_position("LONG", trade_amount)
-            else: print("ACTION           :   🐺 WAIT 🐺")
+                if config.live_trade: open_position("UP", trade_amount)
 
-        elif direction == "RED" and ((previous_volume / volume_prefix) > current_volume):
-            if entry_exit.GO_SHORT(one_minute, five_minute, one_hour):
+    elif direction == "RED" and ((previous_volume() / 5) < current_volume()):
+        if quote_asset_balance("DOWN") < config.qty_in_USDT:
+            trade_amount = config.qty_in_USDT - quote_asset_balance("DOWN")
+            if trade_amount >= 10:
                 print(colored("ACTION           :   💥 GO_SHORT 💥", "red"))
-                if config.live_trade: binance_futures.open_position("SHORT", trade_amount)
-            else: print("ACTION           :   🐺 WAIT 🐺")
+                if config.live_trade: open_position("DOWN", trade_amount)
 
-        else: print("ACTION           :   🐺 WAIT 🐺")
+    elif direction == "GREEN_INDECISIVE":
+        if quote_asset_balance("DOWN") > config.qty_in_USDT * 1.05:
+            if config.live_trade: close_position("UP")
 
-    print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
+    elif direction == "RED_INDECISIVE":
+        if quote_asset_balance("DOWN") > config.qty_in_USDT * 1.05:
+            if config.live_trade: close_position("DOWN")
 
-def one_shot_one_kill():
-    position_info = get_position.get_position_info()
-    direction    = heikin_ashi.get_clear_direction(6)
-    one_hour     = heikin_ashi.get_hour(1)
-    five_minute  = heikin_ashi.get_current_minute(5)
-    one_minute   = heikin_ashi.get_current_minute(1)
+    else: print("ACTION           :   🐺 WAIT 🐺")
 
-    if position_info == "LONGING":
-        if entry_exit.DIRECTION_CHANGE_EXIT_LONG(one_hour) or ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_LONG()):
-            print("ACTION           :   💰 CLOSE_LONG 💰")
-            binance_futures.close_position("LONG")
-        else: print(colored("ACTION           :   HOLDING_LONG", "green"))
 
-    elif position_info == "SHORTING":
-        if entry_exit.DIRECTION_CHANGE_EXIT_SHORT(one_hour) or ((get_position.get_unRealizedProfit() == "PROFIT") and entry_exit.CLOSE_SHORT()):
-            print("ACTION           :   💰 CLOSE_SHORT 💰")
-            binance_futures.close_position("SHORT")
-        else: print(colored("ACTION           :   HOLDING_SHORT", "red"))
+def asset_info(SIDE):
+    return client.get_symbol_ticker(symbol=config.coin + SIDE + "USDT")
 
-    else:
-        # firstrun_volume = binance_futures.get_volume("FIRSTRUN", "6HOUR")
-        previous_volume = binance_futures.get_volume("PREVIOUS", "6HOUR")
-        current_volume  = binance_futures.get_volume("CURRENT", "6HOUR")
+def asset_balance(SIDE):
+    return float(client.get_asset_balance(asset=config.coin + SIDE).get("free"))
 
-        if direction == "GREEN" and ((previous_volume / volume_prefix) > current_volume):
-            if entry_exit.GO_LONG(one_minute, five_minute, one_hour):
-                print(colored("ACTION           :   🚀 GO_LONG 🚀", "green"))
-                if config.live_trade: binance_futures.open_position("LONG", config.quantity)
-            else: print("ACTION           :   🐺 WAIT 🐺")
+def quote_asset_balance(SIDE):
+    return round(float(client.get_symbol_ticker(symbol=config.coin + SIDE + "USDT").get("price")) * float(client.get_asset_balance(asset=config.coin).get("free")), 2)
 
-        elif direction == "RED" and ((previous_volume / volume_prefix) > current_volume):
-            if entry_exit.GO_SHORT(one_minute, five_minute, one_hour):
-                print(colored("ACTION           :   💥 GO_SHORT 💥", "red"))
-                if config.live_trade: binance_futures.open_position("SHORT", config.quantity)
-            else: print("ACTION           :   🐺 WAIT 🐺")
+def open_position(SIDE, trade_amount):
+    client.order_market_buy(symbol=config.coin + SIDE + "USDT", quoteOrderQty=trade_amount)
 
-        else: print("ACTION           :   🐺 WAIT 🐺")
-    print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
+def close_position(SIDE):
+    asset_balance = float(client.get_asset_balance(asset=config.coin + SIDE).get("free"))
+    client.order_market_sell(symbol=config.coin + SIDE + "USDT", quantity=asset_balance)
