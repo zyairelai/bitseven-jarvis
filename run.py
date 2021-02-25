@@ -7,7 +7,7 @@ try:
     from apscheduler.schedulers.blocking import BlockingScheduler
 
     def lets_make_some_money():
-        return "HAHA"
+        heikin_ashi.lets_make_some_money()
 
     while True:
         try:
