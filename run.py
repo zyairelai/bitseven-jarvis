@@ -12,7 +12,7 @@ try:
     while True:
         try:
             scheduler = BlockingScheduler()
-            scheduler.add_job(lets_make_some_money, 'cron', second='0,20,40,60')
+            scheduler.add_job(lets_make_some_money, 'cron', minute='30')
             scheduler.start()
 
         except (KeyError,

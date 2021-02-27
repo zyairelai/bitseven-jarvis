@@ -1,6 +1,5 @@
 import os
 import config
-import entry_exit
 import heikin_ashi
 from datetime import datetime
 from termcolor import colored
@@ -16,36 +15,40 @@ def first_run_volume(): return float(KLINE_INTERVAL_12HOUR()[-3][5])
 def previous_volume(): return float(KLINE_INTERVAL_12HOUR()[-2][5]) 
 def current_volume(): return float(KLINE_INTERVAL_12HOUR()[-1][5]) 
 
-volume_prefix = 5
 profit_prefix = 1.05
 
 def lets_make_some_money():
     direction = heikin_ashi.current_candle(KLINE_INTERVAL_12HOUR())
 
-    if direction == "GREEN" and ((previous_volume() / volume_prefix) < current_volume()):
+    if direction == "GREEN" and volume_confirmation(previous_volume(), current_volume()):
         if quote_asset_balance("UP") < config.qty_in_USDT:
             trade_amount = config.qty_in_USDT - quote_asset_balance("UP")
             if trade_amount >= 10:
                 print(colored("ACTION           :   🚀 GO_LONG 🚀", "green"))
-                if config.live_trade: open_position("UP", trade_amount)
+                if config.live_trade: 
+                    open_position("UP", trade_amount)
+                    print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
 
-    elif direction == "RED" and ((previous_volume() / volume_prefix) < current_volume()):
+    elif direction == "RED" and volume_confirmation(previous_volume(), current_volume()):
         if quote_asset_balance("DOWN") < config.qty_in_USDT:
             trade_amount = config.qty_in_USDT - quote_asset_balance("DOWN")
             if trade_amount >= 10:
                 print(colored("ACTION           :   💥 GO_SHORT 💥", "red"))
-                if config.live_trade: open_position("DOWN", trade_amount)
+                if config.live_trade: 
+                    open_position("DOWN", trade_amount)
+                    print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
 
     elif (direction == "GREEN" or direction == "GREEN_INDECISIVE"):
         if quote_asset_balance("DOWN") > config.qty_in_USDT * profit_prefix:
-            if config.live_trade: close_position("UP")
+            if config.live_trade: 
+                close_position("UP")
+                print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
 
     elif (direction == "RED" or direction == "RED_INDECISIVE"):
         if quote_asset_balance("DOWN") > config.qty_in_USDT * profit_prefix:
-            if config.live_trade: close_position("DOWN")
-
-    else: print("ACTION           :   🐺 WAIT 🐺")
-
+            if config.live_trade: 
+                close_position("DOWN")
+                print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
 
 def asset_info(SIDE):
     return client.get_symbol_ticker(symbol=config.coin + SIDE + "USDT")
@@ -62,6 +65,9 @@ def open_position(SIDE, trade_amount):
 def close_position(SIDE):
     asset_balance = float(client.get_asset_balance(asset=config.coin + SIDE).get("free"))
     client.order_market_sell(symbol=config.coin + SIDE + "USDT", quantity=asset_balance)
+
+def volume_confirmation(previous_volume, current_volume):
+    return current_volume > (previous_volume / 5)
 
 round_decimal = 6
 def initial_Open(klines)  : return round(((float(klines[-4][1]) + float(klines[-4][4])) / 2), round_decimal)
@@ -127,5 +133,7 @@ def pattern_broken(): # return "BROKEN" // "NOT_BROKEN"
        ((first == "GREEN")      and (previous == "GREEN")      and (current == "INDECISIVE")) or \
        ((first == "RED")        and (previous == "RED")        and (current == "INDECISIVE")) or \
        ((current == "GREEN")    and (first_High(klines) > previous_High(klines)) and (previous_High(klines) < current_Close(klines))) or \
-       ((current == "RED")      and (first_Low(klines) < previous_Low(klines))   and (previous_Low(klines) > current_Close(klines))): return "BROKEN"
+       ((current == "RED")      and (first_Low(klines) < previous_Low(klines))   and (previous_Low(klines) > current_Close(klines))) or \
+       ((current == "GREEN")    and (current_Close(klines) < previous_Close(klines))) or \
+       ((current == "RED")      and (current_Close(klines) > previous_Close(klines))): return "BROKEN"
     else: return "NOT_BROKEN"
