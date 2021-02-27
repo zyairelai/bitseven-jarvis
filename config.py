@@ -9,9 +9,9 @@ user_input = input("Enter a number   :   ") or '1'
 print()
 
 # Asset Configuration
-if user_input == '2': 
+if user_input == '2':
     coin = "TRX"
-    trade_amount = 100
+    trade_amount = 200
 else:
     coin = "BNB"
     trade_amount = 0.01
