@@ -1,6 +1,5 @@
 import os
 import config
-import heikin_ashi
 from datetime import datetime
 from termcolor import colored
 from binance.client import Client
@@ -18,7 +17,7 @@ def current_volume(): return float(KLINE_INTERVAL_12HOUR()[-1][5])
 profit_prefix = 1.05
 
 def lets_make_some_money():
-    direction = heikin_ashi.current_candle(KLINE_INTERVAL_12HOUR())
+    direction = current_candle(KLINE_INTERVAL_12HOUR())
 
     if direction == "GREEN" and volume_confirmation(previous_volume(), current_volume()):
         if quote_asset_balance("UP") < config.qty_in_USDT:
@@ -104,15 +103,6 @@ def current_candle(klines):
     elif (current_Open(klines) == current_Low(klines)) : return "GREEN"
     elif (current_Open(klines) > current_Close(klines)): return "RED_INDECISIVE"
     elif (current_Close(klines) > current_Open(klines)): return "GREEN_INDECISIVE"
-
-def one_minute_exit_test(CANDLE): # return "PASS" // "FAIL"
-    klines = KLINE_INTERVAL_12HOUR()
-    threshold = abs((previous_Open(klines) - previous_Close(klines)) / 4)
-
-    if CANDLE == "GREEN":
-        if (previous_High(klines) > current_High(klines)) and (current_Low(klines) < (previous_Low(klines) + threshold)): return True
-    elif CANDLE == "RED":
-        if (current_Low(klines) > previous_Low(klines)) and (current_High(klines) > (previous_High(klines) - threshold)): return True
 
 def pattern_broken(): # return "BROKEN" // "NOT_BROKEN"
     klines = KLINE_INTERVAL_12HOUR()

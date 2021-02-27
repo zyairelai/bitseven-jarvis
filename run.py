@@ -1,21 +1,27 @@
 try:
     import os, time, requests, socket, urllib3
-    import config, heikin_ashi
+    import config, heikin_ashi, futures
     from datetime import datetime
     from termcolor import colored
     from binance.exceptions import BinanceAPIException
     from apscheduler.schedulers.blocking import BlockingScheduler
 
+    if futures.position_information()[0].get('marginType') != "isolated": futures.change_margin_to_ISOLATED()
+    if int(futures.position_information()[0].get("leverage")) != config.leverage:
+        futures.change_leverage(config.leverage)
+        print(colored("CHANGED LEVERAGE :   " + futures.position_information()[0].get("leverage") + "x\n", "red"))
+
     def lets_make_some_money():
-        heikin_ashi.lets_make_some_money()
+        if config.mode == "FUTURES": futures.lets_make_some_money()
+        elif config.mode == "BLVT": heikin_ashi.lets_make_some_money()
 
     while True:
         try:
             scheduler = BlockingScheduler()
-            scheduler.add_job(lets_make_some_money, 'cron', minute='30')
+            scheduler.add_job(lets_make_some_money, 'cron', minute='0,30')
             scheduler.start()
 
-        except (KeyError,
+        except (OSError, KeyError,
                 socket.timeout,
                 BinanceAPIException,
                 ConnectionResetError,

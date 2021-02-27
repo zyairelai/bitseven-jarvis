@@ -1,17 +1,33 @@
-live_trade      = False     # False to see the output & verify your API key is working
-
-# print("Which coin do you want to trade?")
-# print("1. BTC")
-# print("2. ETH")
-# user_input = input("\nEnter a number   :   ") or '1'
-
-# Asset Configuration
-user_input = 1
-if user_input == '2': coin = "ETH"
-else: coin = "BTC"
-
+live_trade  = True
+leverage    = 5
 qty_in_USDT = 200
 
+print("Which coin do you want to trade?")
+print("1. BNB")
+print("2. TRX")
+user_input = input("Enter a number   :   ") or '1'
+print()
+
+# Asset Configuration
+if user_input == '2': 
+    coin = "TRX"
+    trade_amount = 100
+else:
+    coin = "BNB"
+    trade_amount = 0.01
+
+print("Which mode do you want to enable?")
+print("1. Futures")
+print("2. Binance Leverage Token")
+user_input = input("Enter a number   :   ") or '1'
+print()
+
+if user_input == '2': mode = "BLVT"
+else: mode = "FUTURES"
+
+pair = coin + "USDT"
 print("Coin Name        :   " + str(coin))
-print("Trade Quantity   :   " + str(qty_in_USDT) + " " + " USDT")
+if mode == "BLVT": print("Trade Quantity   :   " + str(qty_in_USDT) + " USDT")
+if mode == "FUTURES": print("Trade Quantity   :   " + str(trade_amount) + " " + coin)
+print("Trading Mode     :   " + mode)
 print()

@@ -1,5 +1,3 @@
-# IT IS NOT COMPLETE YET DO NOT USE THIS REPOSITORY
-
 # leverage-bot
 Spot Trading For [Binance Leverage Token](https://www.binance.com/en/leveraged-tokens/tokens/allTokens) inherited from [futures-omax](https://github.com/zyairelai/futures-omax)
 
