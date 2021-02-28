@@ -14,7 +14,7 @@ if user_input == '2':
     trade_amount = 200
 else:
     coin = "BNB"
-    trade_amount = 0.01
+    trade_amount = 0.05
 
 print("Which mode do you want to enable?")
 print("1. Futures")
