@@ -2,7 +2,7 @@
 Spot Trading For [Binance Leverage Token](https://www.binance.com/en/leveraged-tokens/tokens/allTokens) inherited from [futures-omax](https://github.com/zyairelai/futures-omax)
 
 # DISCLAIMER
-This automation software is purely handcoded by me [@zyairelai](https://github.com/zyairelai) from scratch with my personal manual trading strategy.  
+This automation software is purely handcoded by [@zyairelai](https://github.com/zyairelai) from scratch with my personal manual trading strategy.  
 Kindly provide feedback through my email `zyairelai@gmail.com` if you are using my repository.  
 If you had modified or improved my code feel free to share with me and we may have futher discussion on this project!  
 Anybody may copy, redistribute, modify of the software. However, limited to NON-COMMERCIAL USED only.  
