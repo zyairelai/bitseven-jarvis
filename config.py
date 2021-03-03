@@ -1,6 +1,6 @@
 live_trade  = True
 leverage    = 5
-qty_in_USDT = 200
+qty_in_USDT = 20 # Minimum 20
 
 print("Which coin do you want to trade?")
 print("1. BNB")

@@ -11,29 +11,34 @@ client      = Client(api_key, api_secret)
 
 def lets_make_some_money():
     position_info = get_position_info()
-    direction = current_candle(KLINE_INTERVAL_12HOUR())
-    if direction == "GREEN": print(colored("CURRENT 12 HOUR  :   " + direction, "green"))
-    elif direction == "RED": print(colored("CURRENT 12 HOUR  :   " + direction, "red"))
-    else: print(colored("CURRENT 12 HOUR  :   " + direction, "yellow"))
+    direction = current_candle(KLINE_INTERVAL_6HOUR())
+    if direction == "GREEN": print(colored("CURRENT 6 HOUR   :   " + direction, "green"))
+    elif direction == "RED": print(colored("CURRENT 6 HOUR   :   " + direction, "red"))
+    else: print(colored("CURRENT 6 HOUR   :   " + direction, "yellow"))
+
+    one_hour  = current_candle(KLINE_INTERVAL_1HOUR())
+    if one_hour == "GREEN": print(colored("CURRENT 1 HOUR   :   " + one_hour, "green"))
+    elif one_hour == "RED": print(colored("CURRENT 1 HOUR   :   " + one_hour, "red"))
+    else: print(colored("CURRENT 1 HOUR   :   " + one_hour, "yellow"))
 
     if position_info == "LONGING":
-        if direction == "RED" and volume_confirmation(previous_volume(), current_volume()):
+        if (one_hour == "RED" or one_hour == "RED_INDECISIVE") and volume_confirmation():
             print("ACTION           :   💰 CLOSE_LONG 💰")
             if config.live_trade: client.futures_create_order(symbol=config.pair, side="SELL", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
         else: print(colored("ACTION           :   HOLDING_LONG", "green"))
 
     elif position_info == "SHORTING":
-        if direction == "GREEN" and volume_confirmation(previous_volume(), current_volume()):
+        if (one_hour == "GREEN" or one_hour == "GREEN_INDECISIVE") and volume_confirmation():
             print("ACTION           :   💰 CLOSE_SHORT 💰")
             if config.live_trade: client.futures_create_order(symbol=config.pair, side="BUY", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
         else: print(colored("ACTION           :   HOLDING_LONG", "green"))
 
     else:
-        if direction == "GREEN" and volume_confirmation(previous_volume(), current_volume()):
+        if direction == "GREEN" and one_hour == "GREEN" and volume_confirmation():
             print(colored("ACTION           :   🚀 GO_LONG 🚀", "green"))
             if config.live_trade: client.futures_create_order(symbol=config.pair, side="BUY", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
 
-        elif direction == "RED" and volume_confirmation(previous_volume(), current_volume()):
+        elif direction == "RED" and one_hour == "RED" and volume_confirmation():
             print(colored("ACTION           :   💥 GO_SHORT 💥", "red"))
             if config.live_trade: client.futures_create_order(symbol=config.pair, side="SELL", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
 
@@ -54,14 +59,20 @@ def current_Open(klines)  : return (previous_Open(klines) + previous_Close(kline
 def current_Close(klines) : return (float(klines[-1][1]) + float(klines[-1][2]) + float(klines[-1][3]) + float(klines[-1][4])) / 4
 def current_High(klines)  : return max(float(klines[-1][2]), current_Open(klines), current_Close(klines))
 def current_Low(klines)   : return min(float(klines[-1][3]), current_Open(klines), current_Close(klines))
-def first_run_volume()    : return float(KLINE_INTERVAL_12HOUR()[-3][5]) 
-def previous_volume()     : return float(KLINE_INTERVAL_12HOUR()[-2][5]) 
-def current_volume()      : return float(KLINE_INTERVAL_12HOUR()[-1][5]) 
-def volume_confirmation(previous_volume, current_volume): return current_volume > (previous_volume / 5)
+def first_run_volume()    : return float(KLINE_INTERVAL_1HOUR()[-3][5]) 
+def previous_volume()     : return float(KLINE_INTERVAL_1HOUR()[-2][5]) 
+def current_volume()      : return float(KLINE_INTERVAL_1HOUR()[-1][5]) 
+
+def volume_confirmation() : 
+    confirmation = current_volume() > (previous_volume() / 5)
+    if confirmation == True: print(colored("VOLUME ENTRY     :   YES", "green"))
+    else: print(colored("VOLUME ENTRY     :   NO", "red"))
+    return confirmation
 
 def get_timestamp()             : return int(time.time() * 1000)
 def position_information()      : return client.futures_position_information(symbol=config.pair, timestamp=get_timestamp())
-def KLINE_INTERVAL_12HOUR()     : return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_12HOUR)
+def KLINE_INTERVAL_1HOUR()      : return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_1HOUR)
+def KLINE_INTERVAL_6HOUR()      : return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_6HOUR)
 def change_leverage(leverage)   : return client.futures_change_leverage(symbol=config.pair, leverage=leverage, timestamp=get_timestamp())
 def change_margin_to_ISOLATED() : return client.futures_change_margin_type(symbol=config.pair, marginType="ISOLATED", timestamp=get_timestamp())
 

@@ -9,45 +9,40 @@ api_key     = os.environ.get('API_KEY')
 api_secret  = os.environ.get('API_SECRET')
 client      = Client(api_key, api_secret)
 
-def KLINE_INTERVAL_12HOUR(): return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_12HOUR)
-def first_run_volume(): return float(KLINE_INTERVAL_12HOUR()[-3][5]) 
-def previous_volume(): return float(KLINE_INTERVAL_12HOUR()[-2][5]) 
-def current_volume(): return float(KLINE_INTERVAL_12HOUR()[-1][5]) 
-
-profit_prefix = 1.05
-
 def lets_make_some_money():
-    direction = current_candle(KLINE_INTERVAL_12HOUR())
+    direction = current_candle(KLINE_INTERVAL_6HOUR())
+    if direction == "GREEN": print(colored("CURRENT 6 HOUR   :   " + direction, "green"))
+    elif direction == "RED": print(colored("CURRENT 6 HOUR   :   " + direction, "red"))
+    else: print(colored("CURRENT 6 HOUR   :   " + direction, "yellow"))
 
-    if direction == "GREEN" and volume_confirmation(previous_volume(), current_volume()):
+    one_hour  = current_candle(KLINE_INTERVAL_1HOUR())
+    if one_hour == "GREEN": print(colored("CURRENT 1 HOUR   :   " + one_hour, "green"))
+    elif one_hour == "RED": print(colored("CURRENT 1 HOUR   :   " + one_hour, "red"))
+    else: print(colored("CURRENT 1 HOUR   :   " + one_hour, "yellow"))
+
+    if direction == "GREEN" and one_hour == "GREEN" and volume_confirmation():
         if quote_asset_balance("UP") < config.qty_in_USDT:
             trade_amount = config.qty_in_USDT - quote_asset_balance("UP")
             if trade_amount >= 10:
                 print(colored("ACTION           :   🚀 GO_LONG 🚀", "green"))
-                if config.live_trade: 
-                    open_position("UP", trade_amount)
-                    print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
+                if config.live_trade: open_position("UP", trade_amount)
 
-    elif direction == "RED" and volume_confirmation(previous_volume(), current_volume()):
+    elif direction == "RED" and one_hour == "RED" and volume_confirmation():
         if quote_asset_balance("DOWN") < config.qty_in_USDT:
             trade_amount = config.qty_in_USDT - quote_asset_balance("DOWN")
             if trade_amount >= 10:
                 print(colored("ACTION           :   💥 GO_SHORT 💥", "red"))
-                if config.live_trade: 
-                    open_position("DOWN", trade_amount)
-                    print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
+                if config.live_trade: open_position("DOWN", trade_amount)
 
     elif (direction == "GREEN" or direction == "GREEN_INDECISIVE"):
-        if quote_asset_balance("DOWN") > config.qty_in_USDT * profit_prefix:
-            if config.live_trade: 
-                close_position("UP")
-                print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
+        if quote_asset_balance("DOWN") > config.qty_in_USDT:
+            if config.live_trade: close_position("UP")
 
     elif (direction == "RED" or direction == "RED_INDECISIVE"):
-        if quote_asset_balance("DOWN") > config.qty_in_USDT * profit_prefix:
-            if config.live_trade: 
-                close_position("DOWN")
-                print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
+        if quote_asset_balance("DOWN") > config.qty_in_USDT:
+            if config.live_trade: close_position("DOWN")
+                
+    print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
 
 def asset_info(SIDE):
     return client.get_symbol_ticker(symbol=config.coin + SIDE + "USDT")
@@ -65,8 +60,11 @@ def close_position(SIDE):
     asset_balance = float(client.get_asset_balance(asset=config.coin + SIDE).get("free"))
     client.order_market_sell(symbol=config.coin + SIDE + "USDT", quantity=asset_balance)
 
-def volume_confirmation(previous_volume, current_volume):
-    return current_volume > (previous_volume / 5)
+def volume_confirmation() : 
+    confirmation = current_volume() > (previous_volume() / 5)
+    if confirmation == True: print(colored("VOLUME ENTRY     :   YES", "green"))
+    else: print(colored("VOLUME ENTRY     :   NO", "red"))
+    return confirmation
 
 round_decimal = 6
 def initial_Open(klines)  : return round(((float(klines[-4][1]) + float(klines[-4][4])) / 2), round_decimal)
@@ -83,6 +81,12 @@ def current_Open(klines)  : return round(((previous_Open(klines) + previous_Clos
 def current_Close(klines) : return round(((float(klines[-1][1]) + float(klines[-1][2]) + float(klines[-1][3]) + float(klines[-1][4])) / 4), round_decimal)
 def current_High(klines)  : return max(float(klines[-1][2]), current_Open(klines), current_Close(klines))
 def current_Low(klines)   : return min(float(klines[-1][3]), current_Open(klines), current_Close(klines))
+def first_run_volume(): return float(KLINE_INTERVAL_1HOUR()[-3][5]) 
+def previous_volume(): return float(KLINE_INTERVAL_1HOUR()[-2][5]) 
+def current_volume(): return float(KLINE_INTERVAL_1HOUR()[-1][5]) 
+
+def KLINE_INTERVAL_1HOUR(): return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_1HOUR)
+def KLINE_INTERVAL_6HOUR(): return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_6HOUR)
 
 def first_candle(klines):
     if   (first_Open(klines) == first_High(klines)): return "RED"
@@ -103,27 +107,3 @@ def current_candle(klines):
     elif (current_Open(klines) == current_Low(klines)) : return "GREEN"
     elif (current_Open(klines) > current_Close(klines)): return "RED_INDECISIVE"
     elif (current_Close(klines) > current_Open(klines)): return "GREEN_INDECISIVE"
-
-def pattern_broken(): # return "BROKEN" // "NOT_BROKEN"
-    klines = KLINE_INTERVAL_12HOUR()
-
-    if   (first_Open(klines) == first_Low(klines)) : first = "GREEN"
-    elif (first_Open(klines) == first_High(klines)): first = "RED"
-    else: first = "INDECISIVE"
-
-    if   (previous_Open(klines) == previous_Low(klines)) : previous = "GREEN"
-    elif (previous_Open(klines) == previous_High(klines)): previous = "RED"
-    else: previous = "INDECISIVE"
-
-    if   (current_Open(klines) == current_Low(klines)) : current = "GREEN"
-    elif (current_Open(klines) == current_High(klines)): current = "RED"
-    else: current = "INDECISIVE"
-
-    if ((first == "INDECISIVE") and (previous == "INDECISIVE") and (current == "INDECISIVE")) or \
-       ((first == "GREEN")      and (previous == "GREEN")      and (current == "INDECISIVE")) or \
-       ((first == "RED")        and (previous == "RED")        and (current == "INDECISIVE")) or \
-       ((current == "GREEN")    and (first_High(klines) > previous_High(klines)) and (previous_High(klines) < current_Close(klines))) or \
-       ((current == "RED")      and (first_Low(klines) < previous_Low(klines))   and (previous_Low(klines) > current_Close(klines))) or \
-       ((current == "GREEN")    and (current_Close(klines) < previous_Close(klines))) or \
-       ((current == "RED")      and (current_Close(klines) > previous_Close(klines))): return "BROKEN"
-    else: return "NOT_BROKEN"
