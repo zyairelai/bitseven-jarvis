@@ -1,5 +1,5 @@
 # leverage-bot
-Spot Trading For [Binance Leverage Token](https://www.binance.com/en/leveraged-tokens/tokens/allTokens) inherited from [futures-omax](https://github.com/zyairelai/futures-omax)
+This is a crazy PLAY WITH FIRE strategy. Use it at your own risk.
 
 # DISCLAIMER
 This automation software is purely handcoded by [@zyairelai](https://github.com/zyairelai) from scratch with my personal manual trading strategy.  
