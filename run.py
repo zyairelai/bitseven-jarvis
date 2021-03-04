@@ -1,19 +1,18 @@
 try:
     import os, time, requests, socket, urllib3
-    import config, heikin_ashi, futures
+    import config, strategy
     from datetime import datetime
     from termcolor import colored
     from binance.exceptions import BinanceAPIException
     from apscheduler.schedulers.blocking import BlockingScheduler
 
-    if futures.position_information()[0].get('marginType') != "isolated": futures.change_margin_to_ISOLATED()
-    if int(futures.position_information()[0].get("leverage")) != config.leverage:
-        futures.change_leverage(config.leverage)
-        print(colored("CHANGED LEVERAGE :   " + futures.position_information()[0].get("leverage") + "x\n", "red"))
+    if strategy.position_information()[0].get('marginType') != "cross": strategy.change_margin_to_CROSSED()
+    if int(strategy.position_information()[0].get("leverage")) != config.leverage:
+        strategy.change_leverage(config.leverage)
+        print(colored("CHANGED LEVERAGE :   " + strategy.position_information()[0].get("leverage") + "x\n", "red"))
 
     def lets_make_some_money():
-        if config.mode == "FUTURES": futures.lets_make_some_money()
-        elif config.mode == "BLVT": heikin_ashi.lets_make_some_money()
+        strategy.play_with_fire()
 
     while True:
         try:

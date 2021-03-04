@@ -9,7 +9,7 @@ api_key     = os.environ.get('API_KEY')
 api_secret  = os.environ.get('API_SECRET')
 client      = Client(api_key, api_secret)
 
-def lets_make_some_money():
+def play_with_fire():
     position_info = get_position_info()
     direction = current_candle(KLINE_INTERVAL_6HOUR())
     if direction == "GREEN": print(colored("CURRENT 6 HOUR   :   " + direction, "green"))
@@ -24,23 +24,23 @@ def lets_make_some_money():
     if position_info == "LONGING":
         if (one_hour == "RED" or one_hour == "RED_INDECISIVE") and volume_confirmation():
             print("ACTION           :   💰 CLOSE_LONG 💰")
-            if config.live_trade: client.futures_create_order(symbol=config.pair, side="SELL", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
+            if config.live_trade: client.futures_create_order(symbol=config.pair, side="SELL", type="MARKET", quantity=config.quantity, timestamp=get_timestamp())
         else: print(colored("ACTION           :   HOLDING_LONG", "green"))
 
     elif position_info == "SHORTING":
         if (one_hour == "GREEN" or one_hour == "GREEN_INDECISIVE") and volume_confirmation():
             print("ACTION           :   💰 CLOSE_SHORT 💰")
-            if config.live_trade: client.futures_create_order(symbol=config.pair, side="BUY", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
+            if config.live_trade: client.futures_create_order(symbol=config.pair, side="BUY", type="MARKET", quantity=config.quantity, timestamp=get_timestamp())
         else: print(colored("ACTION           :   HOLDING_LONG", "green"))
 
     else:
         if direction == "GREEN" and one_hour == "GREEN" and volume_confirmation():
             print(colored("ACTION           :   🚀 GO_LONG 🚀", "green"))
-            if config.live_trade: client.futures_create_order(symbol=config.pair, side="BUY", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
+            if config.live_trade: client.futures_create_order(symbol=config.pair, side="BUY", type="MARKET", quantity=config.quantity, timestamp=get_timestamp())
 
         elif direction == "RED" and one_hour == "RED" and volume_confirmation():
             print(colored("ACTION           :   💥 GO_SHORT 💥", "red"))
-            if config.live_trade: client.futures_create_order(symbol=config.pair, side="SELL", type="MARKET", quantity=config.trade_amount, timestamp=get_timestamp())
+            if config.live_trade: client.futures_create_order(symbol=config.pair, side="SELL", type="MARKET", quantity=config.quantity, timestamp=get_timestamp())
 
         else: print("ACTION           :   🐺 WAIT 🐺")
     print("Last action executed @ " + datetime.now().strftime("%H:%M:%S") + "\n")
@@ -74,7 +74,7 @@ def position_information()      : return client.futures_position_information(sym
 def KLINE_INTERVAL_1HOUR()      : return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_1HOUR)
 def KLINE_INTERVAL_6HOUR()      : return client.get_klines(symbol=config.coin + "USDT", limit=4, interval=Client.KLINE_INTERVAL_6HOUR)
 def change_leverage(leverage)   : return client.futures_change_leverage(symbol=config.pair, leverage=leverage, timestamp=get_timestamp())
-def change_margin_to_ISOLATED() : return client.futures_change_margin_type(symbol=config.pair, marginType="ISOLATED", timestamp=get_timestamp())
+def change_margin_to_CROSSED()  : return client.futures_change_margin_type(symbol=config.pair, marginType="CROSSED", timestamp=get_timestamp())
 
 def current_candle(klines):
     if   (current_Open(klines) == current_High(klines)): return "RED"
