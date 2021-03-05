@@ -1,5 +1,4 @@
 # IT IS NOT COMPLETE YET
 
-# BLACK-WHALE-GOLD
-This is a crazy PLAY WITH FIRE strategy.  
-Use it at your own risk.
+# BITSEVEN-JARVIS
+This project is a console output to assist you to enter a trade on BitSeven.
